@@ -1,30 +1,140 @@
-<!-- Your HTML code -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="design.css">
-    <title>REPDANES</title>
+    <title>Organiseret Svindel APS</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #262c33;
+            color: #ffffff;
+        }
+        .hidden {
+            display: none;
+        }
+        .notification {
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+        }
+        .notification.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .modal {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img class="logo" src="https://ugc.production.linktr.ee/0405458b-92db-4464-993d-105687b7a468_repdanes--1-.png?io=true&size=avatar-v1_0" alt="Repdanes Logo">
-            <h1>REPDANES</h1>
-        </div>
-        <div class="button-container">
-            <a class="button prod" href="products.html">PRODUKTER</a>
-            <a class="button track" href="tracking.html">TRACKING</a>
-            <a class="button discord" href="https://discord.gg/Bnx6NtBS">DISCORDEN</a>
-        </div>
-        <h3>Made with ❤️ from Denmark</h3>
+<div id="login-container" class="min-h-screen flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-6">Danish Cooks Systems</h1>
+        <button onclick="loginWithDiscord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Login med Discord</button>
+        <button onclick="showAdminLogin()" class="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded">Admin Login</button>
+    </div>
+</div>
+
+<div id="admin-login-container" class="min-h-screen flex items-center justify-center hidden">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-6">Admin Login</h1>
+        <input type="password" id="admin-code" placeholder="Indtast Admin Kode" class="mb-4 p-2 rounded text-black">
+        <button onclick="adminLogin()" class="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded">Login</button>
+    </div>
+</div>
+
+<div id="dashboard-container" class="hidden">
+    <header class="bg-gray-800 p-4 flex justify-between items-center">
+        <div class="text-2xl font-bold">Danish Cooks</div>
+        <nav class="space-x-4">
+            <a href="#" id="profile-link" class="hover:text-gray-400">Profil</a>
+            <a href="#" id="system-link" class="hover:text-gray-400">System</a>
+            <a href="#" id="scraper-link" class="hover:text-gray-400">Scraper</a>
+        </nav>
     </header>
-    
-    
 
+    <main class="p-4">
+        <section id="profile-section" class="section hidden">
+            <div class="profile">
+                <h1 class="text-3xl font-bold mb-4">Profil</h1>
+                <div id="profile-info"></div>
+            </div>
+        </section>
 
+        <section id="system-section" class="section hidden">
+            <h1 class="text-3xl font-bold mb-4">Systemindstillinger</h1>
+            <div class="theme-selector mb-4">
+                <label for="theme-select" class="block mb-2">Vælg Tema</label>
+                <select id="theme-select" onchange="setTheme(this.value)" class="p-2 rounded text-black">
+                    <option value="glowing-purple">Glowing Purple</option>
+                    <option value="glowing-blue">Glowing Blue</option>
+                    <option value="glowing-red">Glowing Red</option>
+                    <option value="glowing-yellow">Glowing Yellow</option>
+                    <option value="glowing-green">Glowing Green</option>
+                    <option value="glowing-pink">Glowing Pink</option>
+                    <option value="glowing-orange">Glowing Orange</option>
+                    <option value="glowing-teal">Glowing Teal</option>
+                </select>
+            </div>
+        </section>
+
+        <section id="scraper-section" class="section hidden">
+            <h1 class="text-3xl font-bold mb-4">Product Scraper</h1>
+            <div class="form-group mb-4">
+                <label for="store-url" class="block mb-2">Indsæt Shopify Butik URL:</label>
+                <input type="text" id="store-url" placeholder="https://example.com/" class="p-2 rounded text-black w-full mb-4">
+                <div class="mb-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" id="only-in-stock" class="form-checkbox h-5 w-5 text-blue-600"><span class="ml-2 text-white">Kun På Lager</span>
+                    </label>
+                    <label class="inline-flex items-center ml-4">
+                        <input type="checkbox" id="only-out-of-stock" class="form-checkbox h-5 w-5 text-blue-600"><span class="ml-2 text-white">Kun Udsolgt</span>
+                    </label>
+                    <label class="inline-flex items-center ml-4">
+                        <input type="checkbox" id="only-100-percent" class="form-checkbox h-5 w-5 text-blue-600"><span class="ml-2 text-white">Kun 100% Rabat</span>
+                    </label>
+                </div>
+                <button onclick="scanAllProducts()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Scan Alle Produkter</button>
+            </div>
+            <div class="loading hidden" id="loading">
+                <div class="spinner border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+            </div>
+            <div id="discount-tabs" class="discount-tabs grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+    </main>
+
+    <div class="modal hidden p-4" id="product-modal">
+        <div class="modal-header flex justify-between items-center bg-gray-800 p-4 rounded-t">
+            <h2 class="text-2xl font-bold">Produktmuligheder</h2>
+            <button class="modal-close text-2xl" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body p-4" id="modal-body"></div>
+        <div class="modal-footer p-4 bg-gray-800 rounded-b">
+            <button onclick="generateDirectBuyLink()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generer Direkte Købslink</button>
+        </div>
+    </div>
+
+    <div class="notification fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded hidden" id="notification"></div>
+
+    <div class="cart fixed bottom-5 left-5 bg-gray-800 text-white p-4 rounded hidden" id="cart">
+        <h2 class="text-2xl font-bold mb-4">Kurv</h2>
+        <div class="cart-items max-h-40 overflow-y-auto" id="cart-items"></div>
+        <button onclick="generateDirectBuyLink()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Gå Til Kassen</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
