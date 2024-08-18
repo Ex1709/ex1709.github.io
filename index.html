@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="viewport" content="width=device=width, initial-scale=1.0">
+    <title>Vindues Guiden</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome for icons -->
+    <!-- Load the DM Serif Display and Manrope fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Manrope font to the entire website */
+        body {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700; /* Default font weight for all text */
+        }
+        /* Specific styling for all headlines */
+        .highlight-text {
+            font-family: 'DM Serif Display', serif; /* Ensure DM Serif Display is applied */
+            font-weight: 500;
+            color: white; /* Make the headlines white */
+        }
+        /* Button font adjustment */
+        .button {
+            font-family: 'Manrope', sans-serif; /* Apply Manrope font to the buttons */
+            font-weight: 700; /* Ensure bold text */
+            font-size: 1rem; /* Set font size to match the "Se vores video" text */
+            border-radius: 1.5rem; /* Set to a moderately rounded style */
+        }
+        /* Video section adjustments */
+        #video-section {
+            max-width: 100%; /* Increase the size of the video section to full width */
+            margin: 0 auto; /* Center the video within its container */
+        }
+        /* Play icon styling */
+        .play-icon {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-family: 'DM Serif Display', serif; /* Apply DM Serif Display font to the play icon text */
+            font-weight: 500;
+            font-size: 1rem; /* Match the size of the Ansøg nu! button */
+        }
+        .play-icon svg {
+            margin-left: 8px;
+            fill: currentColor; /* Match icon color with text */
+        }
+        .play-icon:hover {
+            color: #66b2ff; /* Light blue hover color */
+        }
+        /* Card styling with dimmed black background, blue border, and glow */
+        .card {
+            background-color: #1a1a1a; /* Dimmed light black background */
+            color: white;
+            border: 2px solid #004aad; /* Blue border */
+            border-radius: 1rem; /* Rounded corners */
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 0px 15px 5px rgba(102, 178, 255, 0.6); /* Light blue glow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            margin: 0 1rem; /* Add space between cards */
+        }
+        /* Card icon styling */
+        .card-icon {
+            font-size: 1.5rem;
+            color: white;
+            background-color: white; /* Make the icon background white */
+            color: #004aad; /* Icon color matches the blue theme */
+            padding: 0.5rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            margin-right: 1rem;
+            border: 2px solid white; /* White border around the icon */
+        }
+        .card h3 {
+            margin: 0;
+        }
+        /* Checkmark styling */
+        .checkmark-list li {
+            position: relative;
+            padding-left: 30px; /* Space for the checkmark */
+            margin-bottom: 10px;
+            list-style: none; /* Remove default bullet points */
+        }
+        .checkmark-list li::before {
+            content: "\2713"; /* Unicode for checkmark */
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1rem; /* Adjust size as needed */
+            color: #66b2ff; /* Light blue color for checkmark */
+        }
+        /* Segment styling */
+        .segment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        @media(min-width: 768px) {
+            .segment {
+                flex-direction: row;
+                text-align: left;
+                justify-content: center;
+            }
+        }
+
+        .segment img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .segment-content {
+            max-width: 600px;
+            margin-left: 20px;
+        }
+
+        .segment-content h2 {
+            font-family: 'DM Serif Display', serif; /* Apply DM Serif Display font to all headings */
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .segment-content p {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .segment-content .light-blue-text {
+            color: #66b2ff;
+            font-weight: 700;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 700px; /* Match the size of the Calendly widget */
+            width: 100%;
+            height: 700px; /* Fixed height to match the widget */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+            margin: 10px;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a; /* Dark background for the track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #004aad; /* Blue scrollbar */
+            border-radius: 20px;
+            border: 3px solid #1a1a1a; /* Padding around scrollbar thumb */
+        }
+        /* New Segment Card Styling with Glow */
+        .dimmed-card {
+            background-color: rgba(26, 26, 26, 0.9); /* Light dimmed black background */
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: 0px 0px 15px 5px rgba(102, 178, 255, 0.6); /* Light blue glow */
+        }
+
+        /* Accordion styling */
+        .accordion-container {
+            max-width: 800px; /* Limit the width of the accordion */
+            margin: 0 auto; /* Center the accordion */
+            font-family: 'Manrope', sans-serif; /* Use Manrope for module text */
+        }
+        .accordion-item {
+            background-color: #1a1a1a;
+            border: 2px solid #004aad;
+            border-radius: 1rem; /* More rounded corners */
+            margin-bottom: 1.5rem; /* Added space between accordion items */
+            box-shadow: 0px 0px 15px 5px rgba(102, 178, 255, 0.6); /* Light blue glow */
+        }
+        .accordion-title {
+            background-color: #1a1a1a;
+            color: white;
+            cursor: pointer;
+            padding: 1rem;
+            font-size: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 1rem; /* Round corners */
+        }
+        .accordion-title:hover {
+            background-color: #004aad;
+        }
+        .accordion-content {
+            background-color: #1a1a1a; /* Keep the background color consistent */
+            color: white; /* White text */
+            padding: 1rem;
+            display: none;
+            border-radius: 0 0 1rem 1rem; /* Rounded corners for bottom part */
+            text-align: left;
+        }
+        .accordion-content.active {
+            display: block;
+        }
+        .accordion-icon {
+            color: #66b2ff;
+            font-size: 1.5rem;
+        }
+        .accordion-icon.active {
+            transform: rotate(45deg);
+        }
+
+        /* Add space between description and first dropdown */
+        .section-description {
+            margin-bottom: 2rem; /* Add space before the first accordion item */
+            max-width: 800px;
+            margin: 0 auto 2rem auto; /* Center the description text */
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* FAQ Section Styling */
+        .faq-section {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .faq-section .accordion-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-black to-[#004aad] min-h-screen text-white">
+
+    <header class="text-center py-10">
+        <img src="image.png" alt="Vindues Guiden Logo" class="mx-auto w-32">
+    </header>
+
+    <main class="flex flex-col items-center justify-center mx-4 my-10 lg:flex-row lg:space-x-10 lg:justify-center">
+        <!-- Left Side Content -->
+        <div class="text-center lg:text-left lg:w-1/2">
+            <h1 class="highlight-text text-4xl mb-6">Tjen de første 100.000 kr. online indenfor 180 dage uden erfaring</h1>
+            <ul class="checkmark-list text-lg mb-6 space-y-2">
+                <li>Kundegaranti</li>
+                <li>5x ugentlig coaching</li>
+                <li>Systemer som automatisk booker +10 møder om ugen</li>
+                <li>Uvurderligt community</li>
+                <li>Sparring med de dygtigste iværksættere i DK</li>
+                <li>Helt ny forretningsmodel</li>
+            </ul>
+            <div class="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 justify-center lg:justify-start">
+                <a href="#" class="bg-white text-[#004aad] border-2 border-[#004aad] px-8 py-4 text-lg font-bold rounded-xl custom-shadow hover:bg-[#004aad] hover:text-white button" onclick="openModal()">Ansøg nu!</a>
+                <div class="play-icon" onclick="playVideo()">
+                    <span>Se vores video</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M10 8l6 4-6 4z" fill="currentColor"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side Video -->
+        <div class="mt-10 lg:mt-0 lg:w-1/3">
+            <div class="bg-black p-5 rounded-lg custom-shadow" id="video-section">
+                <video id="mainVideo" controls class="w-full rounded-lg">
+                    <source src="video.mp4" type="video/mp4">
+                    Din browser understøtter ikke videoafspilning.
+                </video>
+            </div>
+        </div>
+    </main>
+
+    <!-- Segment Section 1 -->
+    <section class="segment">
+        <img src="mac_showcase.png" alt="Mac Showcase">
+        <div class="segment-content">
+            <h2 class="highlight-text">Start i dag!</h2>
+            <p>I det gennemarbejdede videobibliotek lærer du alt du skal bruge for at komme nemt og sikkert i gang med at booke møder og lukke kunder.</p>
+            <p>Videobiblioteket er perfekt både til dig, som er helt grøn og ingen erfaring har, såvel som dig der leder efter innovative måder at skalere din forretning på.</p>
+            <p class="light-blue-text">35+ Guide ︱10+ Video Guides ︱15+ Skabeloner</p>
+        </div>
+    </section>
+
+    <!-- Segment Section 2 -->
+    <section class="segment">
+        <div class="segment-content">
+            <h2 class="highlight-text">Fællesskab med andre vindere</h2>
+            <p>Verdensklasse fælleskab med andre vinduespudser der har præcis samme vision som dig</p>
+            <p>Bliv en del af vores engagerede fællesskab. Deltag i diskussioner, del erfaringer, og få støtte fra ligesindede. Sammen skaber vi et stærkt netværk!</p>
+            <p class="light-blue-text">24/7 Support ︱30+ Medlemmer︱Daglig Sparing</p>
+        </div>
+        <img src="com_mac_showcase.png" alt="Mac Showcase">
+    </section>
+
+    <!-- Moved Cards Section -->
+    <section class="text-center py-20">
+        <h2 class="highlight-text text-3xl font-bold mb-10">Hvad kræver det af dig?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 px-6 md:px-20">
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="card-icon">1</div>
+                <h3>Du ser hele vores forløb fra A-Z</h3>
+            </div>
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="card-icon">2</div>
+                <h3>Du ønsker at få et bedre liv</h3>
+            </div>
+            <!-- Card 3 -->
+            <div class="card">
+                <div class="card-icon">3</div>
+                <h3>Du ønsker at udvikle dig selv</h3>
+            </div>
+            <!-- Card 4 -->
+            <div class="card">
+                <div class="card-icon">4</div>
+                <h3>Du ønsker at være din egen chef</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Dimmed Black Segment with Glow -->
+    <section class="bg-gradient-to-r from-black to-[#004aad] text-white py-16">
+        <div class="dimmed-card">
+            <span class="bg-[#004aad] text-white px-4 py-2 rounded-md text-sm font-semibold">Vi garanterer succes</span>
+            <h2 class="highlight-text text-4xl mt-4">Du er garanteret <span class="text-[#66b2ff]">minimum 10 kunder</span> indenfor de første 30 dage</h2>
+            <p class="mt-4">Får du tilladelse til at tage part i Vindues Guiden, så kan vi garanterer dig <span class="font-bold">MINIMUM</span> 10 betalende kunder, hvilket svare til en omsætning på 2000 - 5000 kr.</p>
+            <p class="mt-2">Indenfor bare 30 dage!</p>
+            <a href="#" class="bg-[#004aad] text-white px-8 py-4 text-lg font-bold rounded-md mt-6 inline-block custom-shadow hover:bg-[#66b2ff]" onclick="openModal()">Ansøg nu</a>
+        </div>
+    </section>
+
+    <!-- Accordion Section for Modules -->
+    <section class="text-center py-20">
+        <h2 class="highlight-text text-3xl font-bold mb-10">Trin-for-Trin Moduler til Succes</h2>
+        <p class="section-description">
+            Vores moduler er nøje designet til at guide dig fra begynder til ekspert med over 50+ siders 
+            detaljeret materiale herunde 10+ video guides til at udvilke dine færdigheder.
+        </p>
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Modul 1 | Introduktion til Succes (20 min)
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>I det første modul lægger vi fundamentet for din succes. Du vil få en generel introduktion, et overblik over platformen og en gennemgang af de vigtigste regler og retningslinjer, du skal kende. Dette modul sikrer, at du er godt rustet til de kommende udfordringer.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Modul 2 | Praktiske Færdigheder (20 min)
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Her dykker vi ned i de praktiske færdigheder. Vi viser dig, hvilket udstyr du skal bruge, og hvordan du anvender det mest effektivt. Du får også adgang til en række video guides, der demonstrerer de basale og de bedste teknikker indenfor vinduespudsning.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Modul 3 | Brand- og Marketingstrategier (20 min)
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>At opbygge et stærkt brand er afgørende for om din virksomhed får succes. I dette modul lærer du, hvordan du skaber en professionel visuel identitet, opretter og optimerer din Facebook-side, og hvordan du markedsfører dig effektivt både online og offline.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Modul 4 | Effektive Salgsteknikker (20 min)
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Salg er hjertet i enhver virksomhed. Dette modul lærer dig, hvordan du lukker din første kunde, undgår begynderfejl, og hvilke salgstricks der virker bedst. Du vil også få indsigt i, hvordan du bedst kommunikerer med dine kunder og følger op efter en serviceaftale.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Modul 5 | Juridiske og Økonomiske Aspekter (20 min)
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Sidst, men ikke mindst, gennemgår vi de juridiske og økonomiske aspekter af at drive en vinduespudsningsvirksomhed. Her dykker vi ned i skatteregler, moms og bogføring. Vi giver dig masser af tips og tricks til at navigere i disse områder, så du kan drive din virksomhed med selvtillid og succes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section (directly under the accordion section) -->
+    <section class="faq-section text-center py-20">
+        <h2 class="highlight-text text-3xl font-bold mb-10">FAQ</h2>
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Kan jeg tilmelde mig hvis jeg er under 18?
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ja, så længe du har fået samtykke fra dine forældre!</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Er der tilfredshedsgaranti?
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ja, vi tilbyder en garanti inden for en bestemt tidsramme, hvis du ikke er tilfreds med kurset. Se vores vilkår og betingelser for detaljer.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Kan jeg få support undervejs i kurset?
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Absolut! Vi tilbyder 24/7 kundesupport til at hjælpe med eventuelle spørgsmål eller bekymringer, du måtte have undervejs i kurset.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Er vinduespudsning et fleksibelt arbejde?
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ja, vinduespudsning er et fleksibelt arbejde. Som selvstændig vinduespudser har du friheden til at arbejde, når det passer dig, da du er din egen chef. Det er dog vigtigt at opbygge en korrekt abonnementstruktur og overholde dine aftaler med kunderne.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-title" onclick="toggleAccordion(this)">
+                    Vil det være muligt at netværke med andre i foløbet?
+                    <i class="fas fa-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Bestemt! Vi gør meget ud af at man kan connecte på tværs af vores community. Udover dette afholdes der løbende live calls for elever, hvor man kan komme og snakke med andre, hele teamet og andre elever.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final Call-to-Action Section -->
+    <section class="bg-gradient-to-r from-black to-[#004aad] text-white py-16">
+        <div class="dimmed-card">
+            <span class="bg-[#004aad] text-white px-4 py-2 rounded-md text-sm font-semibold">Spørgsmål</span>
+            <h2 class="highlight-text text-4xl mt-4">Er du ikke afklaret?</h2>
+            <p class="mt-4">Er der stadig spørgsmål, du ikke har fået besvaret på vores hjemmeside eller i min gratis introvideo?</p>
+            <p class="mt-2">Mødet inkluderer en detaljeret gennemgang af Vindues Guiden, indblik i vores egen rejse, samt mulighed for at få besvaret alle dine spørgsmål.</p>
+            <p class="mt-2">Vælg det tidspunkt, der passer dig bedst.</p>
+            <a href="#" class="bg-[#004aad] text-white px-8 py-4 text-lg font-bold rounded-md mt-6 inline-block custom-shadow hover:bg-[#66b2ff]" onclick="openModal()">Ansøg nu</a>
+        </div>
+    </section>
+
+    <!-- Modal Section -->
+    <div id="calendlyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="calendly-inline-widget" data-url="https://calendly.com/vinduesguiden/30min" style="min-width:320px;height:700px;"></div>
+            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+        </div>
+    </div>
+
+    <script>
+        function playVideo() {
+            var video = document.getElementById('mainVideo');
+            video.play();
+            video.scrollIntoView({ behavior: 'smooth' }); // Scrolls to the video smoothly
+        }
+
+        function openModal() {
+            document.getElementById("calendlyModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("calendlyModal").style.display = "none";
+        }
+
+        function toggleAccordion(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.accordion-icon');
+
+            content.classList.toggle('active');
+            icon.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
